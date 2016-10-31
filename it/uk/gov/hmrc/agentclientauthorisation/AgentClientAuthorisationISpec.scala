@@ -23,7 +23,7 @@ import play.api.Logger
 import play.api.libs.json._
 import play.mvc.Http.HeaderNames.LOCATION
 import reactivemongo.bson.BSONObjectID
-import uk.gov.hmrc.agentclientauthorisation.model.Arn
+import uk.gov.hmrc.agentclientauthorisation.model.{Arn, MtdClientId}
 import uk.gov.hmrc.agentclientauthorisation.support._
 import uk.gov.hmrc.domain.AgentCode
 import uk.gov.hmrc.play.http.HttpResponse
@@ -209,7 +209,7 @@ class AgentClientAuthorisationISpec extends UnitSpec with MongoAppAndStubs with 
     invitationId
   }
 
-  def createInvitations(): ((String, String), (String, String)) = {
+  def createInvitations(): ((String, MtdClientId), (String, MtdClientId)) = {
     dropMongoDb()
     given().agentAdmin(arn, agentCode).isLoggedIn().andHasMtdBusinessPartnerRecord()
     val client1Id = "1234567890"
@@ -235,7 +235,7 @@ class AgentClientAuthorisationISpec extends UnitSpec with MongoAppAndStubs with 
   }
 
 
-  private def createDuplicateInvitations(): ((String, String), (String, String)) = {
+  private def createDuplicateInvitations(): ((String, MtdClientId), (String, MtdClientId)) = {
     dropMongoDb()
     given().agentAdmin(arn, agentCode).isLoggedIn().andHasMtdBusinessPartnerRecord()
     val clientId = "1234567890"
@@ -258,9 +258,9 @@ class AgentClientAuthorisationISpec extends UnitSpec with MongoAppAndStubs with 
     (invitation(json1), invitation(json2))
   }
 
-  private def invitation(json: JsValue): (String, String) = {
+  private def invitation(json: JsValue): (String, MtdClientId) = {
       (json \ "id").as[String] ->
-      (json \ "clientId").as[String]
+      (json \ "clientId").as[MtdClientId]
   }
 
   private def invitations(response: JsValue) = {
