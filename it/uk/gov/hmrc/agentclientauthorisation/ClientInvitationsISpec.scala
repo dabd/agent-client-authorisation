@@ -44,7 +44,7 @@ class ClientInvitationsISpec extends UnitSpec with MongoAppAndStubs with Secured
     "accept a pending request" in {
       val invitationId = createInvitation(s"""{"regime": "$REGIME", "clientId": "${mtdClientId.value}", "postcode": "AA1 1AA"}""")
 
-      given().client().isLoggedIn(saUtr)
+      given().client().isLoggedIn()
         .aRelationshipIsCreatedWith(arn)
 
       val response = responseForAcceptInvitation(invitationId)
@@ -58,7 +58,7 @@ class ClientInvitationsISpec extends UnitSpec with MongoAppAndStubs with Secured
 
     "reject a pending request" in {
       val invitationId = createInvitation(s"""{"regime": "$REGIME", "clientId": "${mtdClientId.value}", "postcode": "AA1 1AA"}""")
-      given().client().isLoggedIn(saUtr)
+      given().client().isLoggedIn()
 
       val response = responseForRejectInvitation(invitationId)
 
@@ -85,7 +85,7 @@ class ClientInvitationsISpec extends UnitSpec with MongoAppAndStubs with Secured
       createInvitations()
       createInvitations()
 
-      given().client().isLoggedIn(saUtr)
+      given().client().isLoggedIn()
 
       val response = new Resource(s"/agent-client-authorisation/clients/${mtdClientId.value}/invitations/received", port).get
       response.status shouldBe 200
@@ -101,7 +101,7 @@ class ClientInvitationsISpec extends UnitSpec with MongoAppAndStubs with Secured
       responseForGetClientInvitations().status shouldBe 401
     }
 
-    "return 404 when try to access someone else's invitations" in {
+    "return 403 when try to access someone else's invitations" in {
       createInvitations()
 
       given().client().isLoggedIn(saUtr)

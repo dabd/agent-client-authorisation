@@ -18,7 +18,8 @@ package uk.gov.hmrc.agentclientauthorisation.support
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import play.api.http.HeaderNames
-import uk.gov.hmrc.domain.SaAgentReference
+import uk.gov.hmrc.agentclientauthorisation.model.MtdClientId
+import uk.gov.hmrc.domain.{SaAgentReference, SaUtr}
 
 trait WiremockAware {
   def wiremockBaseUrl: String
@@ -79,9 +80,10 @@ trait ClientUserAuthStubs[A] extends BasicUserAuthStubs[A] {
   me: A with WiremockAware =>
 
   def oid: String
-  def clientId: String
+  def clientId: MtdClientId
+  def saUtr: SaUtr = FakeMtdClientId.toSaUtr(clientId)
 
-  def isLoggedIn(utr: String): A = {
+  def isLoggedIn(): A = {
     stubFor(get(urlPathMatching(s"/authorise/read/agent/.*")).willReturn(aResponse().withStatus(401).withHeader(HeaderNames.CONTENT_LENGTH, "0")))
     stubFor(get(urlPathMatching(s"/authorise/write/agent/.*")).willReturn(aResponse().withStatus(401).withHeader(HeaderNames.CONTENT_LENGTH, "0")))
     stubFor(get(urlPathEqualTo(s"/auth/authority")).willReturn(aResponse().withStatus(200).withBody(
@@ -96,7 +98,7 @@ trait ClientUserAuthStubs[A] extends BasicUserAuthStubs[A] {
          |  },
          |  "accounts":{
          |    "sa": {
-         |      "utr": "$utr"
+         |      "utr": "${saUtr.value}"
          |    }
          |  },
          |  "lastUpdated":"2016-06-20T10:44:29.634Z",
@@ -113,13 +115,13 @@ trait ClientUserAuthStubs[A] extends BasicUserAuthStubs[A] {
          |[]
          """.stripMargin
     )))
-    stubFor(get(urlPathEqualTo(s"/agencies-fake/clients/sa/$utr"))
+    stubFor(get(urlPathEqualTo(s"/agencies-fake/clients/sa/${saUtr.value}"))
              .willReturn(aResponse()
                 .withStatus(200)
                .withBody(
                  s"""
                    |{
-                   |  "mtdClientId": "$clientId"
+                   |  "mtdClientId": "${clientId.value}"
                    |}
                  """.stripMargin)
              ))
