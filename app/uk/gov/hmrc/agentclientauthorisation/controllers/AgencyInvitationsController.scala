@@ -56,7 +56,7 @@ class AgencyInvitationsController(invitationsRepository: InvitationsRepository,
   }
 
   private def location(invitation: Invitation) = {
-    LOCATION -> routes.AgencyInvitationsController.getSentInvitation(invitation.arn, invitation.id.stringify).url
+    LOCATION -> invitationLinkHref(invitation, invitation.arn)
   }
 
   def getSentInvitations(arn: Arn, regime: Option[String], clientId: Option[String], status: Option[InvitationStatus]) = onlyForSaAgents.async { implicit request =>
@@ -89,11 +89,12 @@ class AgencyInvitationsController(invitationsRepository: InvitationsRepository,
     Future successful NotImplemented
   }
 
-  private def toHalResource(requests: List[Invitation], arn: Arn, regime: Option[String], clientId: Option[String], status: Option[InvitationStatus]): HalResource = {
-    val requestResources: Vector[HalResource] = requests.map(toHalResource(_, arn)).toVector
+  private def toHalResource(invitations: List[Invitation], arn: Arn, regime: Option[String], clientId: Option[String], status: Option[InvitationStatus]): HalResource = {
+    val invitationResources: Vector[HalResource] = invitations.map(toHalResource(_, arn)).toVector
+    val invitationLinks: Seq[HalLink] = invitations.map(toHalLink(_, arn))
 
-    val links = Vector(HalLink("self", routes.AgencyInvitationsController.getSentInvitations(arn, regime, clientId, status).url))
-    Hal.hal(Json.obj(), links, Vector("invitations"-> requestResources))
+    val links: Seq[HalLink] = HalLink("self", routes.AgencyInvitationsController.getSentInvitations(arn, regime, clientId, status).url) +: invitationLinks
+    Hal.hal(Json.obj(), links.toVector, Vector("invitations"-> invitationResources))
   }
 
   private def toHalResource(invitation: Invitation, arn: Arn): HalResource = {
@@ -103,6 +104,14 @@ class AgencyInvitationsController(invitationsRepository: InvitationsRepository,
       links = links ++ HalLink("cancel", routes.AgencyInvitationsController.cancelInvitation(arn, invitation.id.stringify).url)
     }
     HalResource(links, toJson(invitation).as[JsObject])
+  }
+
+  private def toHalLink(invitation: Invitation, arn: Arn): HalLink = {
+    HalLink("invitations", invitationLinkHref(invitation, arn))
+  }
+
+  private def invitationLinkHref(invitation: Invitation, arn: Arn): String = {
+    routes.AgencyInvitationsController.getSentInvitation(arn, invitation.id.stringify).url
   }
 
   private val postcodeWithoutSpacesRegex = "^[A-Za-z]{1,2}[0-9]{1,2}[A-Za-z]?[0-9][A-Za-z]{2}$".r
