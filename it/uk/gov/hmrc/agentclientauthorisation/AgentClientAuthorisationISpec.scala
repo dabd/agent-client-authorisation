@@ -120,14 +120,6 @@ class AgentClientAuthorisationISpec extends UnitSpec with MongoAppAndStubs with 
       selfLinkHref shouldBe getInvitationsUrl
 
 
-      val invitationsInLinkSection = linksInvitations(responseJson).value
-      invitationsInLinkSection should have size numberOfExpectedInvitations
-
-      // TODO: Would be nice to be able to 'pimp' these values to add methods
-      val firstLinkInvite = invitationsInLinkSection head
-      val secondLinkInvite = invitationsInLinkSection(1)
-      fail("TODO: chek invite links")
-
       val invitationsArray = embeddedInvitations(responseJson).value
       val firstInvitation = invitationsArray head
       val secondInvitation = invitationsArray(1)
@@ -136,6 +128,17 @@ class AgentClientAuthorisationISpec extends UnitSpec with MongoAppAndStubs with 
       val secondInvitationId = checkInvitation(client2Id, secondInvitation, testStartTime)
 
       firstInvitationId should not be secondInvitationId
+
+
+      val invitationsInLinkSection = linksInvitations(responseJson).value
+      invitationsInLinkSection should have size numberOfExpectedInvitations
+
+      // TODO check for links to the client invitations too
+      // TODO: Would be nice to be able to 'pimp' these values to add methods
+      val firstLinkInvite = invitationsInLinkSection head
+      val secondLinkInvite = invitationsInLinkSection(1)
+      (firstLinkInvite \ "href").as[String] shouldBe expectedAgencyInvitationLink(arn, firstInvitationId)
+      (secondLinkInvite \ "href").as[String] shouldBe expectedAgencyInvitationLink(arn, secondInvitationId)
     }
 
     "create and retrieve duplicate invitations" in {
@@ -195,7 +198,7 @@ class AgentClientAuthorisationISpec extends UnitSpec with MongoAppAndStubs with 
     val alphanumeric = "[0-9A-Za-z]+"
     val invitationId = (invitation \ "id").as[String]
     invitationId should fullyMatch regex alphanumeric
-    (invitation \ "_links" \ "self" \ "href").as[String] shouldBe s"/agent-client-authorisation/agencies/${arn.arn}/invitations/sent/$invitationId"
+    (invitation \ "_links" \ "self" \ "href").as[String] shouldBe expectedAgencyInvitationLink(arn, invitationId)
     (invitation \ "_links" \ "cancel" \ "href").as[String] shouldBe s"/agent-client-authorisation/agencies/${arn.arn}/invitations/sent/$invitationId"
     (invitation \ "_links" \ "agency" \ "href").as[String] shouldBe s"http://localhost:$wiremockPort/agencies-fake/agencies/${arn.arn}"
     (invitation \ "arn") shouldBe JsString(arn.arn)
@@ -206,6 +209,9 @@ class AgentClientAuthorisationISpec extends UnitSpec with MongoAppAndStubs with 
     (invitation \ "lastUpdated").as[Long] should beRecent
     invitationId
   }
+
+  private def expectedAgencyInvitationLink(arn: Arn, invitationId: String): String =
+    s"/agent-client-authorisation/agencies/${arn.arn}/invitations/sent/$invitationId"
 
   def createInvitations(): ((String, String), (String, String)) = {
     dropMongoDb()
@@ -274,7 +280,7 @@ class AgentClientAuthorisationISpec extends UnitSpec with MongoAppAndStubs with 
   }
 
   private def linksInvitations(response: JsValue) = {
-    normaliseInvitations(response \ "_embedded" \ "invitations")
+    normaliseInvitations(response \ "_links" \ "invitations")
   }
 
   private def normaliseInvitations(embedded: JsValue): JsArray = {
