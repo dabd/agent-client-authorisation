@@ -62,8 +62,7 @@ class AgencyInvitationsControllerSpec extends UnitSpec with ResettingMockitoSuga
 
       val response = await(controller.getSentInvitations(arn, None, None, None)(FakeRequest()))
       status(response) shouldBe 200
-      val value1 = (jsonBodyOf(response) \ "_links" \ "invitations")
-      value1
+      (jsonBodyOf(response) \ "_links" \ "invitations")
     }
   }
 }

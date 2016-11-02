@@ -62,7 +62,7 @@ class AgentClientAuthorisationISpec extends UnitSpec with MongoAppAndStubs with 
       val response = responseForGetInvitations(clientId)
 
       response.status shouldBe 200
-      val invitation = invitations(response.json)
+      val invitation = embeddedInvitations(response.json)
       invitation.value.size shouldBe 1
       invitation.value.head \ "clientId" shouldBe JsString(clientId)
       response.json \ "_links" \ "self" \ "href" shouldBe JsString("/agent-client-authorisation/agencies/ABCDEF12345678/invitations/sent?clientId=1234567890")
@@ -108,23 +108,27 @@ class AgentClientAuthorisationISpec extends UnitSpec with MongoAppAndStubs with 
   "/agencies/:arn/invitations" should {
     "create and retrieve invitations" in {
       val testStartTime = DateTime.now().getMillis
-      val ((_, client1Id), (_ ,client2Id)) = createInvitations
+      val numberOfExpectedInvitations: Long = 2
+      val ((_, client1Id), (_ ,client2Id)) = createInvitations()
 
       note("the freshly added invitations should be available")
-      val (responseJson, invitationsArray) = eventually {
-        // MongoDB is slow sometimes
-        val responseJson = responseForGetInvitations().json
-
-        Logger.info(s"responseJson = $responseJson")
-
-        val requestsArray = invitations(responseJson).value.sortBy(j => (j \ "clientId").as[String])
-        requestsArray should have size 2
-        (responseJson, requestsArray)
+      val responseJson = getResponseJson(){ json =>
+        embeddedInvitations(json).value.sortBy(j => (j \ "clientId").as[String]) should have size numberOfExpectedInvitations
       }
 
       val selfLinkHref = (responseJson \ "_links" \ "self" \ "href").as[String]
       selfLinkHref shouldBe getInvitationsUrl
 
+
+      val invitationsInLinkSection = linksInvitations(responseJson).value
+      invitationsInLinkSection should have size numberOfExpectedInvitations
+
+      // TODO: Would be nice to be able to 'pimp' these values to add methods
+      val firstLinkInvite = invitationsInLinkSection head
+      val secondLinkInvite = invitationsInLinkSection(1)
+      fail("TODO: chek invite links")
+
+      val invitationsArray = embeddedInvitations(responseJson).value
       val firstInvitation = invitationsArray head
       val secondInvitation = invitationsArray(1)
 
@@ -139,20 +143,14 @@ class AgentClientAuthorisationISpec extends UnitSpec with MongoAppAndStubs with 
       createDuplicateInvitations()
 
       note("the freshly added invitations should be available")
-      val (responseJson, invitationsArray) = eventually {
-        // MongoDB is slow sometimes
-        val responseJson = responseForGetInvitations().json
-
-        Logger.info(s"responseJson = $responseJson")
-
-        val requestsArray = invitations(responseJson).value
-        requestsArray should have size 2
-        (responseJson, requestsArray)
+      val responseJson = getResponseJson(){ json =>
+        embeddedInvitations(json).value should have size 2
       }
 
       val selfLinkHref = (responseJson \ "_links" \ "self" \ "href").as[String]
       selfLinkHref shouldBe getInvitationsUrl
 
+      val invitationsArray = embeddedInvitations(responseJson).value
       val firstInvitation = invitationsArray.head
       val secondInvitation = invitationsArray(1)
 
@@ -220,7 +218,7 @@ class AgentClientAuthorisationISpec extends UnitSpec with MongoAppAndStubs with 
     eventually {
       inside(responseForGetInvitations()) { case resp =>
         resp.status shouldBe 200
-        invitations(resp.json).value shouldBe 'empty
+        embeddedInvitations(resp.json).value shouldBe 'empty
       }
     }
 
@@ -244,7 +242,7 @@ class AgentClientAuthorisationISpec extends UnitSpec with MongoAppAndStubs with 
     eventually {
       inside(responseForGetInvitations()) { case resp =>
         resp.status shouldBe 200
-        invitations(resp.json).value shouldBe 'empty
+        embeddedInvitations(resp.json).value shouldBe 'empty
       }
     }
 
@@ -258,13 +256,28 @@ class AgentClientAuthorisationISpec extends UnitSpec with MongoAppAndStubs with 
     (invitation(json1), invitation(json2))
   }
 
+
+  private def getResponseJson[T]()(whenThisPasses: JsValue => T) = eventually {
+    val responseJson = responseForGetInvitations().json
+    Logger.info(s"responseJson = $responseJson")
+    whenThisPasses(responseJson)
+    responseJson
+  }
+
   private def invitation(json: JsValue): (String, String) = {
       (json \ "id").as[String] ->
       (json \ "clientId").as[String]
   }
 
-  private def invitations(response: JsValue) = {
-    val embedded = response \ "_embedded" \ "invitations"
+  private def embeddedInvitations(response: JsValue) = {
+    normaliseInvitations(response \ "_embedded" \ "invitations")
+  }
+
+  private def linksInvitations(response: JsValue) = {
+    normaliseInvitations(response \ "_embedded" \ "invitations")
+  }
+
+  private def normaliseInvitations(embedded: JsValue): JsArray = {
     embedded match {
       case array: JsArray => array
       case obj: JsObject => JsArray(Seq(obj))
