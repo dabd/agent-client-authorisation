@@ -19,11 +19,14 @@ package uk.gov.hmrc.agentclientauthorisation
 import java.net.URL
 
 import play.api.ApplicationLoader.Context
+import play.api.http.HttpErrorHandler
+import play.api.http.Status._
 import play.api.inject.{BindingKey, Injector, SimpleInjector}
 import play.api.libs.ws.ahc.AhcWSComponents
-import play.api.mvc.Controller
+import play.api.mvc.Results._
+import play.api.mvc.{Controller, RequestHeader, Results}
 import play.api.routing.Router
-import play.api.{ApplicationLoader, BuiltInComponentsFromContext, Logger}
+import play.api.{ApplicationLoader, BuiltInComponentsFromContext, GlobalSettings, Logger}
 import play.modules.reactivemongo.{ReactiveMongoComponent, ReactiveMongoComponentImpl}
 import uk.gov.hmrc.agentclientauthorisation.connectors.{AgenciesFakeConnector, RelationshipsConnector}
 import uk.gov.hmrc.agentclientauthorisation.controllers.{AgencyInvitationsController, ClientInvitationsController, WhitelistController}
@@ -37,6 +40,7 @@ import uk.gov.hmrc.play.config.{AppName, RunMode, ServicesConfig}
 import uk.gov.hmrc.play.http.hooks.HttpHook
 import uk.gov.hmrc.play.http.ws._
 
+import scala.concurrent.Future
 import scala.reflect.ClassTag
 
 object WSHttp extends WSGet with WSPut with WSPost with WSDelete with WSPatch with AppName with HttpAuditing {
@@ -101,8 +105,43 @@ class MicroserviceComponents(context: Context) extends BuiltInComponentsFromCont
     }
   }
 
+  //TODO all we really want is what uk.gov.hmrc.play.microservice.bootstrap.JsonErrorHandling does
+  override lazy val httpErrorHandler: HttpErrorHandler = new GlobalSettingsHttpErrorHandler(global)
+
   //TODO remove deprecated global if possible
   override lazy val injector: Injector =
     new SimpleInjector(MicroserviceInjector) + router + cookieSigner + csrfTokenSigner + httpConfiguration + tempFileCreator + global + crypto + wsClientConfig + ahcWsClientConfig + wsApi + wsClient
 
+}
+
+// Based on Play's private GlobalSettingsHttpErrorHandler
+private[agentclientauthorisation] class GlobalSettingsHttpErrorHandler (global: GlobalSettings) extends HttpErrorHandler {
+
+  /**
+   * Invoked when a client error occurs, that is, an error in the 4xx series.
+   *
+   * @param request The request that caused the client error.
+   * @param statusCode The error status code.  Must be greater or equal to 400, and less than 500.
+   * @param message The error message.
+   */
+  def onClientError(request: RequestHeader, statusCode: Int, message: String) = {
+    statusCode match {
+      case BAD_REQUEST => global.onBadRequest(request, message)
+      case FORBIDDEN => Future.successful(Forbidden(views.html.defaultpages.unauthorized()))
+      case NOT_FOUND => global.onHandlerNotFound(request)
+      case clientError if statusCode >= 400 && statusCode < 500 =>
+        Future.successful(Results.Status(clientError)(views.html.defaultpages.badRequest(request.method, request.uri, message)))
+      case nonClientError =>
+        throw new IllegalArgumentException(s"onClientError invoked with non client error status code $statusCode: $message")
+    }
+  }
+
+  /**
+   * Invoked when a server error occurs.
+   *
+   * @param request The request that triggered the server error.
+   * @param exception The server error.
+   */
+  def onServerError(request: RequestHeader, exception: Throwable) =
+    global.onError(request, exception)
 }
