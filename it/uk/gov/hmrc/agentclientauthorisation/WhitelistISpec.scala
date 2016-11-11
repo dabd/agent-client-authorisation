@@ -36,12 +36,18 @@ class WhitelistISpec extends UnitSpec with MongoAppAndStubs {
 
   "A service endpoint" should {
     "respond with NOT_IMPLEMENTED if whitelist is enabled and there is no IP address in header" in {
+      //TODO revive whitelist once play-whitelist-filter is upgraded to play 2.5
+      pending
+
       givenLoggedInAgentIsAuthorised()
 
       authResponseFor(arn, None).status shouldBe 501
     }
 
     "respond with forbidden if whitelist is enabled and there is an IP address in header that is not on the list" in {
+      //TODO revive whitelist once play-whitelist-filter is upgraded to play 2.5
+      pending
+
       givenLoggedInAgentIsAuthorised()
 
       authResponseFor(arn, Some("192.168.1.1")).status shouldBe 403
