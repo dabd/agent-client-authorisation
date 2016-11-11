@@ -31,7 +31,6 @@ import net.ceedubs.ficus.Ficus._
 import play.api.mvc.Call
 import uk.gov.hmrc.api.config.{ServiceLocatorConfig, ServiceLocatorRegistration}
 import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.whitelist.AkamaiWhitelistFilter
 
 
 object ControllerConfiguration extends ControllerConfig {
@@ -56,21 +55,23 @@ object MicroserviceAuthFilter extends AuthorisationFilter with MicroserviceFilte
   override lazy val authConnector = MicroserviceAuthConnector
   override def controllerNeedsAuth(controllerName: String): Boolean = ControllerConfiguration.paramsForController(controllerName).needsAuth
 }
-class WhitelistFilter extends AkamaiWhitelistFilter with MicroserviceFilterSupport {
-  import play.api.Play.current
 
-  override val whitelist: Seq[String] = whitelistConfig("microservice.whitelist.ips")
-  override val destination: Call = Call("GET", "/agent-client-authorisation/forbidden")
-  override val excludedPaths: Seq[Call] = Seq(
-    Call("GET", "/ping/ping"),
-    Call("GET", "/admin/details"),
-    Call("GET", "/admin/metrics"),
-    Call("GET", "/agent-access-control/unauthorised")
-  )
-
-  private def whitelistConfig(key: String): Seq[String] =
-    new String(Base64.getDecoder.decode(Play.configuration.getString(key).getOrElse("")), "UTF-8").split(",")
-}
+//TODO revive whitelist once play-whitelist-filter is upgraded to play 2.5
+//class WhitelistFilter extends AkamaiWhitelistFilter with MicroserviceFilterSupport {
+//  import play.api.Play.current
+//
+//  override val whitelist: Seq[String] = whitelistConfig("microservice.whitelist.ips")
+//  override val destination: Call = Call("GET", "/agent-client-authorisation/forbidden")
+//  override val excludedPaths: Seq[Call] = Seq(
+//    Call("GET", "/ping/ping"),
+//    Call("GET", "/admin/details"),
+//    Call("GET", "/admin/metrics"),
+//    Call("GET", "/agent-access-control/unauthorised")
+//  )
+//
+//  private def whitelistConfig(key: String): Seq[String] =
+//    new String(Base64.getDecoder.decode(Play.configuration.getString(key).getOrElse("")), "UTF-8").split(",")
+//}
 
 object WhitelistFilter {
   import play.api.Play.current
@@ -80,14 +81,15 @@ object WhitelistFilter {
 }
 
 trait MicroserviceGlobal extends DefaultMicroserviceGlobal with RunMode with ServiceRegistry with ControllerRegistry with ServiceLocatorRegistration with ServiceLocatorConfig {
-  private lazy val whitelistFilterSeq = WhitelistFilter.enabled() match {
-    case true =>
-      Logger.info("Starting microservice with IP whitelist enabled")
-      Seq(new WhitelistFilter)
-    case _ =>
-      Logger.info("Starting microservice with IP whitelist disabled")
-      Seq.empty
-  }
+  //TODO revive whitelist once play-whitelist-filter is upgraded to play 2.5
+//  private lazy val whitelistFilterSeq = WhitelistFilter.enabled() match {
+//    case true =>
+//      Logger.info("Starting microservice with IP whitelist enabled")
+//      Seq(new WhitelistFilter)
+//    case _ =>
+//      Logger.info("Starting microservice with IP whitelist disabled")
+//      Seq.empty
+//  }
 
   override val auditConnector = MicroserviceAuditConnector
 
@@ -101,7 +103,8 @@ trait MicroserviceGlobal extends DefaultMicroserviceGlobal with RunMode with Ser
 
   override implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  override lazy val microserviceFilters = whitelistFilterSeq ++ defaultMicroserviceFilters
+  //TODO revive whitelist once play-whitelist-filter is upgraded to play 2.5
+  override lazy val microserviceFilters = /*whitelistFilterSeq ++*/ defaultMicroserviceFilters
 
 //  override def getControllerInstance[A](controllerClass: Class[A]): A = {
 //    getController(controllerClass)
