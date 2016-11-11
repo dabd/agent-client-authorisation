@@ -18,6 +18,7 @@ package uk.gov.hmrc.agentclientauthorisation.repository
 
 import play.api.libs.json.Json.toJsFieldJsValueWrapper
 import play.api.libs.json.{Json, Writes}
+import play.modules.reactivemongo.MongoDbConnection
 import reactivemongo.api.DB
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
@@ -119,4 +120,8 @@ class InvitationsMongoRepository(implicit mongo: () => DB)
 
   override def isInsertion(newRecordId: BSONObjectID, oldRecord: Invitation): Boolean =
     newRecordId != oldRecord.id
+}
+
+object InvitationsMongoRepository extends MongoDbConnection {
+  val store = new InvitationsMongoRepository
 }

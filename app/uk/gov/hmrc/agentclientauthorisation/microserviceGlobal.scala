@@ -16,21 +16,19 @@
 
 package uk.gov.hmrc.agentclientauthorisation
 
-import java.util.Base64
-
 import com.typesafe.config.Config
-import play.api.{Application, Configuration, Logger, Play}
+import net.ceedubs.ficus.Ficus._
+import play.api.{Application, Configuration, Play}
+import uk.gov.hmrc.api.config.{ServiceLocatorConfig, ServiceLocatorRegistration}
+import uk.gov.hmrc.api.connector.ServiceLocatorConnector
 import uk.gov.hmrc.play.audit.filters.AuditFilter
 import uk.gov.hmrc.play.auth.controllers.AuthParamsControllerConfig
+import uk.gov.hmrc.play.auth.microservice.filters.AuthorisationFilter
 import uk.gov.hmrc.play.config.{AppName, ControllerConfig, RunMode}
 import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.logging.filters.LoggingFilter
 import uk.gov.hmrc.play.microservice.bootstrap.DefaultMicroserviceGlobal
-import uk.gov.hmrc.play.auth.microservice.filters.AuthorisationFilter
-import net.ceedubs.ficus.Ficus._
-import play.api.mvc.Call
-import uk.gov.hmrc.api.config.{ServiceLocatorConfig, ServiceLocatorRegistration}
-import uk.gov.hmrc.play.http.HeaderCarrier
 
 
 object ControllerConfiguration extends ControllerConfig {
@@ -80,7 +78,7 @@ object WhitelistFilter {
 
 }
 
-trait MicroserviceGlobal extends DefaultMicroserviceGlobal with RunMode with ServiceRegistry with ControllerRegistry with ServiceLocatorRegistration with ServiceLocatorConfig {
+abstract class MicroserviceGlobal extends DefaultMicroserviceGlobal with RunMode with ServiceLocatorRegistration with ServiceLocatorConfig {
   //TODO revive whitelist once play-whitelist-filter is upgraded to play 2.5
 //  private lazy val whitelistFilterSeq = WhitelistFilter.enabled() match {
 //    case true =>
@@ -106,9 +104,7 @@ trait MicroserviceGlobal extends DefaultMicroserviceGlobal with RunMode with Ser
   //TODO revive whitelist once play-whitelist-filter is upgraded to play 2.5
   override lazy val microserviceFilters = /*whitelistFilterSeq ++*/ defaultMicroserviceFilters
 
-//  override def getControllerInstance[A](controllerClass: Class[A]): A = {
-//    getController(controllerClass)
-//  }
+  override lazy val slConnector = ServiceLocatorConnector(WSHttp)
 }
 
 object MicroserviceGlobal extends MicroserviceGlobal
