@@ -19,15 +19,19 @@ package uk.gov.hmrc.agentclientauthorisation.support
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import org.scalatestplus.play.OneServerPerSuite
 import play.api.test.FakeApplication
-import uk.gov.hmrc.mongo.{Awaiting => MongoAwaiting, MongoSpecSupport}
+import uk.gov.hmrc.mongo.{MongoSpecSupport, Awaiting => MongoAwaiting}
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext
 
-trait AppAndStubs extends StartAndStopWireMock with StubUtils with OneServerPerSuite {
+trait Stubs extends StartAndStopWireMock with StubUtils {
   me: Suite =>
 
   implicit val hc = HeaderCarrier()
+}
+
+trait AppAndStubs extends Stubs with OneServerPerSuite {
+  me: Suite =>
 
   override implicit lazy val app: FakeApplication = FakeApplication(
     additionalConfiguration = additionalConfiguration

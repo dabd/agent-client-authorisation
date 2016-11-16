@@ -18,15 +18,13 @@ package uk.gov.hmrc.agentclientauthorisation.connectors
 
 import java.net.URL
 
-import uk.gov.hmrc.agentclientauthorisation.WSHttp
-import uk.gov.hmrc.agentclientauthorisation.support.AppAndStubs
+import uk.gov.hmrc.agentclientauthorisation.support.{Stubs, TestWSGet}
 import uk.gov.hmrc.domain.AgentCode
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class AuthConnectorISpec extends UnitSpec with AppAndStubs {
-
+class AuthConnectorISpec extends UnitSpec with Stubs {
 
   "currentAccounts" should {
     "return current accounts" in {
@@ -38,6 +36,6 @@ class AuthConnectorISpec extends UnitSpec with AppAndStubs {
     }
   }
 
-  def newAuthConnector() = app.injector.instanceOf(classOf[AuthConnector])
+  def newAuthConnector() = new AuthConnector(new URL(wiremockBaseUrl), TestWSGet)
 
 }
