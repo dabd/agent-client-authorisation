@@ -3,6 +3,7 @@
   "properties": {
     "_links": {
       "type": "object",
+      "description": "Related links for this resource.",
       "properties": {
         "self": {
           "type": "object",
@@ -93,7 +94,26 @@
                 "type": "string"
               },
               "status": {
-                "type": "string"
+                "description" : "The current status of the invitation",
+                "type": "string",
+                "oneOf": [
+                  {
+                    "enum": [ "Pending" ],
+                    "description": "The invitation has been created, it has not been accepted or rejected by the client. Only the service can set this status"
+                  },
+                  {
+                    "enum": [ "Accepted" ],
+                    "description": "The client has accepted the invitation. Only the client can set this status"
+                  },
+                  {
+                    "enum": [ "Rejected" ],
+                    "description": "The client has rejected the invitation. Only the client can set this status"
+                  },
+                  {
+                    "enum": [ "Cancelled" ],
+                    "description": "The agency has cancelled the invitation. Only the agency can set this status"
+                  }
+                ]
               }
             },
             "required": [
