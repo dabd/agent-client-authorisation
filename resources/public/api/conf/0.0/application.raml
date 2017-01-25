@@ -146,11 +146,12 @@ traits:
       status:
         type: invitations.Status
         description: Filter invitations by status. If multiple 'status' filtering parameters are supplied then only the first is considered. See response body 'status' field for the range of valid values.
+        example:  Pending
         required: false
       clientId:
         type: string
         description: Client's top level ID for their MTD registration (not regime specific).
-        example:  clientId123
+        example:  client123
         required: false
       regime:
         type: invitations.Regime
