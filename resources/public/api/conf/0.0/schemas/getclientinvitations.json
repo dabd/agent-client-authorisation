@@ -8,7 +8,8 @@
           "type": "object",
           "properties": {
             "href": {
-              "type": "string"
+              "type": "string",
+              "description": "Link back to this resource"
             }
           },
           "required": [
@@ -21,7 +22,8 @@
             "type": "object",
             "properties": {
               "href": {
-                "type": "string"
+                "type": "string",
+                "description": "Retrieves a list of invitations sent by an agency"
               }
             },
             "required": [
@@ -50,7 +52,8 @@
                     "type": "object",
                     "properties": {
                       "href": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "Link back to this resource"
                       }
                     },
                     "required": [
@@ -61,7 +64,8 @@
                     "type": "object",
                     "properties": {
                       "href": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "Link to accept the invitation"
                       }
                     },
                     "required": [
@@ -72,7 +76,8 @@
                     "type": "object",
                     "properties": {
                       "href": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "Link to reject the invitation"
                       }
                     },
                     "required": [
@@ -87,22 +92,46 @@
                 ]
               },
               "created": {
-                "type": "string"
+                "type": "string",
+                "description": "Creation time of the request (RFC3339 / ISO8601 format)"
               },
               "lastUpdated": {
-                "type": "string"
+                "type": "string",
+                "description": "Creation time of the request (RFC3339 / ISO8601 format)"
               },
               "arn": {
-                "type": "string"
+                "type": "string",
+                "description": "The Agent Registration Number for the calling agency"
               },
               "regime": {
-                "type": "string"
+                "type": "string",
+                "description": "The tax regime specified in the invitation"
               },
               "clientId": {
-                "type": "string"
+                "type": "string",
+                "description": "Client's top level ID for their MTD registration (not regime specific)"
               },
               "status": {
-                "type": "string"
+                "description" : "The status of the request at the time the request was fulfilled ",
+                "type": "string",
+                "oneOf": [
+                  {
+                    "enum": [ "Pending" ],
+                    "description": "The invitation has been created, it has not been accepted or rejected by the client. Only the service can set this status"
+                  },
+                  {
+                    "enum": [ "Accepted" ],
+                    "description": "The client has accepted the invitation. Only the client can set this status"
+                  },
+                  {
+                    "enum": [ "Rejected" ],
+                    "description": "The client has rejected the invitation. Only the client can set this status"
+                  },
+                  {
+                    "enum": [ "Cancelled" ],
+                    "description": "The agency has cancelled the invitation. Only the agency can set this status"
+                  }
+                ]
               }
             },
             "required": [
