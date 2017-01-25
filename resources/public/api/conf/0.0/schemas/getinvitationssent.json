@@ -3,13 +3,14 @@
   "properties": {
     "_links": {
       "type": "object",
-      "description": "Related links for this resource.",
+      "description": "Related resources",
       "properties": {
         "self": {
           "type": "object",
           "properties": {
             "href": {
-              "type": "string"
+              "type": "string",
+              "description": "A reference to the current resource"
             }
           },
           "required": [
@@ -22,7 +23,8 @@
             "type": "object",
             "properties": {
               "href": {
-                "type": "string"
+                "type": "string",
+                "description": "An array of links to individual Invitation resources (see /agencies/{arn}/invitations/{invitationId}"
               }
             },
             "required": [
@@ -51,7 +53,8 @@
                     "type": "object",
                     "properties": {
                       "href": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "A link to cancel to this invitation"
                       }
                     },
                     "required": [
@@ -62,7 +65,8 @@
                     "type": "object",
                     "properties": {
                       "href": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "A reference to the current resource"
                       }
                     },
                     "required": [
@@ -76,26 +80,32 @@
                 ]
               },
               "regime": {
-                "type": "string"
+                "type": "string",
+                "description" : "The tax regime"
               },
               "clientId": {
-                "type": "string"
+                "type": "string",
+                "description" : "Client's top level ID for their MTD registration (not regime specific)"
               },
               "postcode": {
-                "type": "string"
+                "type": "string",
+                "description" : "The Client's post code"
               },
               "arn": {
-                "type": "string"
+                "type": "string",
+                "description" : "The Agency Registration Number"
               },
               "created": {
-                "type": "string"
+                "type": "string",
+                "description" : "The invitation was created at this time"
               },
               "lastUpdated": {
-                "type": "string"
+                "type": "string",
+                "description" : "The invitation was last updated at this time"
               },
               "status": {
-                "description" : "The current status of the invitation",
                 "type": "string",
+                "description" : "The current status of the invitation",
                 "oneOf": [
                   {
                     "enum": [ "Pending" ],
