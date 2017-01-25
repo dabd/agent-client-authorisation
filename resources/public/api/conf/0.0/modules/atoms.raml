@@ -59,13 +59,13 @@ types:
 
   Status:
     displayName: Statuses
-    enum: [ pending, accepted, rejected, cancelled ]
+    enum: [ Pending, Accepted, Rejected, Cancelled ]
     type: string
     description: |
       The status of the current invitation
       Status  | Meaning
       ------- | -------
-      ```pending``` | The invitation has been created, it has not been accepted or rejected by the client. Only the service can set this status
-      ```accepted``` | The client has accepted the invitation. Only the client can set this status
-      ```rejected``` | The client has rejected the invitation. Only the client can set this status
-      ```cancelled``` | The Agency has cancelled the invitation. Only the Agency can set this status
+      ```Pending``` | The invitation has been created, it has not been accepted or rejected by the client. Only the service can set this status
+      ```Accepted``` | The client has accepted the invitation. Only the client can set this status
+      ```Rejected``` | The client has rejected the invitation. Only the client can set this status
+      ```Cancelled``` | The Agency has cancelled the invitation. Only the Agency can set this status

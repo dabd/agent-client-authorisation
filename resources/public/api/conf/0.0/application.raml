@@ -145,15 +145,17 @@ traits:
     queryParameters:
       status:
         type: invitations.Status
-        description: Filter invitations by status. If multiple 'status' filtering parameters are supplied then only the first is considered.
+        description: Filter invitations by status. If multiple 'status' filtering parameters are supplied then only the first is considered. See response body 'status' field for the range of valid values.
         required: false
       clientId:
         type: string
         description: Client's top level ID for their MTD registration (not regime specific).
+        example:  clientId123
         required: false
       regime:
         type: invitations.Regime
         description: The tax regime.
+        example:  mtd-sa
         required: false
     responses:
       200:
