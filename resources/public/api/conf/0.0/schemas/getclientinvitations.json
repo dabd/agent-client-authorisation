@@ -16,14 +16,13 @@
             "href"
           ]
         },
-        "invitations": {
+        "invitation": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
               "href": {
-                "type": "string",
-                "description": "Retrieves a list of invitations sent by an agency"
+                "type": "string"
               }
             },
             "required": [
@@ -34,7 +33,7 @@
       },
       "required": [
         "self",
-        "invitations"
+        "invitation"
       ]
     },
     "_embedded": {
@@ -48,12 +47,12 @@
               "_links": {
                 "type": "object",
                 "properties": {
-                  "self": {
+                  "reject": {
                     "type": "object",
                     "properties": {
                       "href": {
                         "type": "string",
-                        "description": "Link back to this resource"
+                        "description": "Link to reject the invitation"
                       }
                     },
                     "required": [
@@ -72,12 +71,12 @@
                       "href"
                     ]
                   },
-                  "reject": {
+                  "self": {
                     "type": "object",
                     "properties": {
                       "href": {
                         "type": "string",
-                        "description": "Link to reject the invitation"
+                        "description": "Link back to this resource"
                       }
                     },
                     "required": [
@@ -86,22 +85,10 @@
                   }
                 },
                 "required": [
-                  "self",
+                  "reject",
                   "accept",
-                  "reject"
+                  "self"
                 ]
-              },
-              "created": {
-                "type": "string",
-                "description": "Creation time of the request (RFC3339 / ISO8601 format)"
-              },
-              "lastUpdated": {
-                "type": "string",
-                "description": "Creation time of the request (RFC3339 / ISO8601 format)"
-              },
-              "arn": {
-                "type": "string",
-                "description": "The Agent Registration Number for the calling agency"
               },
               "regime": {
                 "type": "string",
@@ -111,36 +98,35 @@
                 "type": "string",
                 "description": "Client's top level ID for their MTD registration (not regime specific)"
               },
-              "status": {
-                "description" : "The status of the request at the time the request was fulfilled ",
+              "postcode": {
                 "type": "string",
-                "oneOf": [
-                  {
-                    "enum": [ "Pending" ],
-                    "description": "The invitation has been created, it has not been accepted or rejected by the client. Only the service can set this status"
-                  },
-                  {
-                    "enum": [ "Accepted" ],
-                    "description": "The client has accepted the invitation. Only the client can set this status"
-                  },
-                  {
-                    "enum": [ "Rejected" ],
-                    "description": "The client has rejected the invitation. Only the client can set this status"
-                  },
-                  {
-                    "enum": [ "Cancelled" ],
-                    "description": "The agency has cancelled the invitation. Only the agency can set this status"
-                  }
-                ]
+                "description": "This varies between regimes. In this example, for mtd-sa, it is the registered postcode of the client"
+              },
+              "arn": {
+                "type": "string",
+                "description": "Agent Registration Number for the calling agency"
+              },
+              "created": {
+                "type": "string",
+                "description": "Creation time of the request (RFC3339 / ISO8601 format)"
+              },
+              "lastUpdated": {
+                "type": "string",
+                "description": "Creation time of the request (RFC3339 / ISO8601 format)"
+              },
+              "status": {
+                "type": "string",
+                "description": "The status of the request at the time the request was fulfilled"
               }
             },
             "required": [
               "_links",
-              "created",
-              "lastUpdated",
-              "arn",
               "regime",
               "clientId",
+              "postcode",
+              "arn",
+              "created",
+              "lastUpdated",
               "status"
             ]
           }
