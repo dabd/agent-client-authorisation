@@ -1,14 +1,14 @@
 {
   "_links": {
     "self": {
-      "href": "/agent-client-authorisation/agencies/01234567-79ab-cdef-0123-456789abcdef/invitations/sent"
+      "href": "/agent-client-authorisation/agencies/AARN9999999/invitations/sent"
     },
     "invitation": [
       {
-        "href": "/agent-client-authorisation/agencies/01234567-79ab-cdef-0123-456789abcdef/invitations/sent/5880e87b110000110012e834"
+        "href": "/agent-client-authorisation/agencies/AARN9999999/invitations/sent/5880e87b110000110012e834"
       },
       {
-        "href": "/agent-client-authorisation/agencies/01234567-79ab-cdef-0123-456789abcdef/invitations/sent/5880e87b110000110012e835"
+        "href": "/agent-client-authorisation/agencies/AARN9999999/invitations/sent/5880e87b110000110012e835"
       }
     ]
   },
@@ -17,16 +17,16 @@
       {
         "_links": {
           "cancel": {
-            "href": "/agent-client-authorisation/agencies/01234567-79ab-cdef-0123-456789abcdef/invitations/sent/5880e87b110000110012e834/cancel"
+            "href": "/agent-client-authorisation/agencies/AARN9999999/invitations/sent/5880e87b110000110012e834/cancel"
           },
           "self": {
-            "href": "/agent-client-authorisation/agencies/01234567-79ab-cdef-0123-456789abcdef/invitations/sent/5880e87b110000110012e834"
+            "href": "/agent-client-authorisation/agencies/AARN9999999/invitations/sent/5880e87b110000110012e834"
           }
         },
         "regime": "mtd-sa",
-        "clientId": "clientId",
+        "clientId": "client123",
         "postcode": "A11 1AA",
-        "arn": "01234567-79ab-cdef-0123-456789abcdef",
+        "arn": "AARN9999999",
         "created": "2017-01-19T16:25:31.509Z",
         "lastUpdated": "2017-01-19T16:25:31.509Z",
         "status": "Pending"
@@ -34,17 +34,17 @@
       {
         "_links": {
           "cancel": {
-            "href": "/agent-client-authorisation/agencies/01234567-79ab-cdef-0123-456789abcdef/invitations/sent/5880e87b110000110012e835/cancel"
+            "href": "/agent-client-authorisation/agencies/AARN9999999/invitations/sent/5880e87b110000110012e835/cancel"
           },
           "self": {
-            "href": "/agent-client-authorisation/agencies/01234567-79ab-cdef-0123-456789abcdef/invitations/sent/5880e87b110000110012e835"
+            "href": "/agent-client-authorisation/agencies/AARN9999999/invitations/sent/5880e87b110000110012e835"
           }
         },
         "regime": "mtd-sa",
-        "clientId": "clientId",
-        "postcode": "A11 1AA",
-        "arn": "01234567-79ab-cdef-0123-456789abcdef",
-        "created": "2017-01-19T16:25:31.521Z",
+        "clientId": "client234",
+        "postcode": "A22 2AA",
+        "arn": "AARN9999999",
+        "created": "2017-01-20T16:25:31.521Z",
         "lastUpdated": "2017-01-19T16:25:31.521Z",
         "status": "Pending"
       }
