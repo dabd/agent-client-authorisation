@@ -137,6 +137,7 @@ traits:
     arn:
       description: The MTD platform Agent Registration Number.
       type: string
+      example: AARN9999999
   get:
     displayName: Get invitations sent by the agency
     description: Retrieves a list of invitations sent by the agency.
@@ -146,11 +147,12 @@ traits:
       status:
         type: invitations.Status
         description: Filter invitations by status. If multiple 'status' filtering parameters are supplied then only the first is considered. See response body 'status' field for the range of valid values.
+        example:  Pending
         required: false
       clientId:
         type: string
         description: Client's top level ID for their MTD registration (not regime specific).
-        example:  clientId123
+        example:  client123
         required: false
       regime:
         type: invitations.Regime
@@ -162,8 +164,8 @@ traits:
         body:
           application/json:
             description: A list of invitations.
-            type: !include schemas/getinvitationssent.json
-            example: !include examples/get-invitations-sent-example.json
+            type: !include schemas/get-agency-invitations-sent.json
+            example: !include examples/get-agency-invitations-sent-example.json
   post:
     is: [clientRegistrationRequired]
     displayName: Create a new invitation
@@ -172,14 +174,14 @@ traits:
     body:
       application/json:
         description: Create a new invitation.
-        type: !include schemas/postagencyinvitation.json
+        type: !include schemas/post-agency-invitation.json
         example: !include examples/post-agency-invitations-sent-example.json
     responses:
       201:
         description: The invitation was successfully created.
         headers:
           Location:
-            example: /agencies/A123456/invitations/sent/INV123456
+            example: /agencies/AARN9999999/invitations/sent/5888c22e11000011007afc11
             description: Location of the invitation that was created.
       400:
         body:
@@ -213,8 +215,9 @@ traits:
     is: [headers.acceptHeader, loginRequired, mustBeAnAgent, agentRegistrationRequired, permissionOnAgencyRequired, invitationSpecified]
     uriParameters:
       invitationId:
-        description: The id of the invitation.
+        description: A unique invitation id
         type: string
+        example: 5888c22e11000011007afc11
     get:
       displayName: Get a sent invitation
       description: Retrieve a sent invitation.
@@ -225,7 +228,7 @@ traits:
           body:
             application/json:
                 description: Returns the invitation.
-                type: !include schemas/inviation.json
+                type: !include schemas/get-agency-inviation-sent.json
                 example: !include examples/get-agency-invitation-sent-example.json
         401:
           description: The agent must be authenticated and authorised (logged-in) to use this resource

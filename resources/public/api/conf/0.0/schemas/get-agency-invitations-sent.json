@@ -81,7 +81,13 @@
               },
               "regime": {
                 "type": "string",
-                "description" : "The tax regime"
+                "description" : "The tax regime",
+                "oneOf": [
+                  {
+                    "enum": [ "mtd-sa" ],
+                    "description": "The Self Assessment tax regime"
+                  }
+                ]
               },
               "clientId": {
                 "type": "string",

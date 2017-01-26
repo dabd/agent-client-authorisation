@@ -26,6 +26,12 @@
             "href": "/agent-client-authorisation/clients/client123/invitations/received/5889f19c5200005200ed1efc"
           }
         },
+<<<<<<< HEAD
+=======
+        "created": "2016-06-27T01:55:28+00.00",
+        "lastUpdated": "2016-07-02T01:55:28+00.00",
+        "arn": "AARN9999999",
+>>>>>>> 926634a3faa19e2dcea659f721ccf70b11842fbf
         "regime": "mtd-sa",
         "clientId": "client123",
         "postcode": "A11 1AA",
@@ -46,6 +52,12 @@
             "href": "/agent-client-authorisation/clients/client123/invitations/received/5889f19c5200005200ed1efd"
           }
         },
+<<<<<<< HEAD
+=======
+        "created": "2016-06-27T01:55:28+00.00",
+        "lastUpdated": "2016-07-02T01:55:28+00.00",
+        "arn": "AARN9999999",
+>>>>>>> 926634a3faa19e2dcea659f721ccf70b11842fbf
         "regime": "mtd-sa",
         "clientId": "client123",
         "postcode": "A11 1AA",
