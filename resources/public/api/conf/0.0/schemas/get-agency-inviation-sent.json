@@ -65,28 +65,7 @@
       "type": "string",
       "description" : "The Client's post code"
     },
-    "status": {
-      "type": "string",
-      "description" : "The current status of the invitation",
-      "oneOf": [
-        {
-          "enum": [ "Pending" ],
-          "description": "The invitation has been created, it has not been accepted or rejected by the client. Only the service can set this status"
-        },
-        {
-          "enum": [ "Accepted" ],
-          "description": "The client has accepted the invitation. Only the client can set this status"
-        },
-        {
-          "enum": [ "Rejected" ],
-          "description": "The client has rejected the invitation. Only the client can set this status"
-        },
-        {
-          "enum": [ "Cancelled" ],
-          "description": "The agency has cancelled the invitation. Only the agency can set this status"
-        }
-      ]
-    }
+    "status": {"$ref": "status.json"}
   },
   "required": [
     "_links",
