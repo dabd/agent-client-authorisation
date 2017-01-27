@@ -19,7 +19,27 @@ uses:
   headers: http://api-documentation-raml-frontend.service/api-documentation/assets/common/modules/headers.raml
   annotations: http://api-documentation-raml-frontend.service/api-documentation/assets/common/modules/annotations.raml
   types: http://api-documentation-raml-frontend.service/api-documentation/assets/common/modules/types.raml
-  atoms: modules/atoms.raml
+
+types:
+
+  Regime:
+    description: The tax regime
+    type: string
+    enum: [ mtd-sa ]
+
+  Status:
+    displayName: Statuses
+    enum: [ Pending, Accepted, Rejected, Cancelled ]
+    type: string
+    description: |
+      The status of the current invitation
+      Status  | Meaning
+      ------- | -------
+      ```Pending``` | The invitation has been created, it has not been accepted or rejected by the client. Only the service can set this status
+      ```Accepted``` | The client has accepted the invitation. Only the client can set this status
+      ```Rejected``` | The client has rejected the invitation. Only the client can set this status
+      ```Cancelled``` | The Agency has cancelled the invitation. Only the Agency can set this status
+
 
 traits:
   loginRequired:
@@ -144,8 +164,8 @@ traits:
     securedBy: [ sec.oauth_2_0: { scopes: [ "read:sent-invitations" ] } ]
     queryParameters:
       status:
-        type: atoms.Status
-        description: Filter invitations by status. If multiple 'status' filtering parameters are supplied then only the first is considered. See response body 'status' field for the range of valid values.
+        type: Status
+        description: Filter invitations by status. If multiple 'status' filtering parameters are supplied then only the first is considered.
         example:  Pending
         required: false
       clientId:
@@ -154,7 +174,7 @@ traits:
         example:  client123
         required: false
       regime:
-        type: atoms.Regime
+        type: Regime
         description: The tax regime.
         example:  mtd-sa
         required: false
@@ -267,7 +287,7 @@ traits:
     queryParameters:
       status:
         description: filter invitations by status. If multiple 'status' filtering parameters are supplied then only the first is considered.
-        type: atoms.Status
+        type: Status
         example: Pending
         required: false
     responses:
