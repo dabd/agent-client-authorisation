@@ -1,32 +1,7 @@
 {
   "type": "object",
   "properties": {
-    "_links": {
-      "type": "object",
-      "description": "Related resources",
-      "properties": {
-        "self": {"$ref": "self-link.json"},
-        "invitation": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "href": {
-                "type": "string",
-                "description": "An array of links to individual Invitation resources"
-              }
-            },
-            "required": [
-              "href"
-            ]
-          }
-        }
-      },
-      "required": [
-        "self",
-        "invitation"
-      ]
-    },
+    "_links": { "$ref": "invitations-links.json"},
     "_embedded": {
       "type": "object",
       "properties": {
