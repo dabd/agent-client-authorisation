@@ -5,18 +5,7 @@
       "type": "object",
       "description": "Related resources",
       "properties": {
-        "self": {
-          "type": "object",
-          "properties": {
-            "href": {
-              "type": "string",
-              "description": "A link to the current resource"
-            }
-          },
-          "required": [
-            "href"
-          ]
-        },
+        "self": {"$ref": "self-link.json"},
         "invitation": {
           "type": "array",
           "items": {
@@ -25,7 +14,6 @@
               "href": {
                 "type": "string",
                 "description": "An array of links to individual Invitation resources"
-
               }
             },
             "required": [
@@ -74,18 +62,7 @@
                       "href"
                     ]
                   },
-                  "self": {
-                    "type": "object",
-                    "properties": {
-                      "href": {
-                        "type": "string",
-                        "description": "A link to the current resource"
-                      }
-                    },
-                    "required": [
-                      "href"
-                    ]
-                  }
+                  "self": {"$ref": "self-link.json"}
                 },
                 "required": [
                   "reject",

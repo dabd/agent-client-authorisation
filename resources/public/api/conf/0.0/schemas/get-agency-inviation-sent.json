@@ -5,18 +5,7 @@
       "type": "object",
       "description": "Related resources",
       "properties": {
-        "self": {
-          "type": "object",
-          "properties": {
-            "href": {
-              "type": "string",
-              "description": "A link to the current resource"
-            }
-          },
-          "required": [
-            "href"
-          ]
-        },
+        "self": {"$ref": "self-link.json"},
         "cancel": {
           "type": "object",
           "properties": {
