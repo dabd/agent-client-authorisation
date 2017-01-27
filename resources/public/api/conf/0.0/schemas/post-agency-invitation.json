@@ -2,17 +2,9 @@
   "type": "object",
   "description": "Creates a new invitation between the agency and client",
   "properties": {
-    "regime": {
-      "$ref": "regime.json"
-    },
-    "clientId": {
-      "type": "string",
-      "description" : "Client's top level ID for their MTD registration (not regime specific)"
-    },
-    "postcode": {
-      "type": "string",
-      "description" : "The Client's post code"
-    }
+    "regime": {"$ref": "regime.json"},
+    "clientId": {"$ref": "clientid.json"},
+    "postcode": {"$ref": "postcode.json"}
   },
   "required": [
     "regime",

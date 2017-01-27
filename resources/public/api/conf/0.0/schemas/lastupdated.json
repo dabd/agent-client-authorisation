@@ -1,0 +1,4 @@
+{
+  "type": "string",
+  "description": "Last update time of the request (RFC3339 / ISO8601 format)"
+}

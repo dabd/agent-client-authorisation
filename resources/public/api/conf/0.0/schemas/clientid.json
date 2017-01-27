@@ -1,0 +1,4 @@
+{
+  "type": "string",
+  "description": "Client's top level ID for their MTD registration (not regime specific)"
+}

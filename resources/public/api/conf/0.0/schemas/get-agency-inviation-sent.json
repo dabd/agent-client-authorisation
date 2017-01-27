@@ -35,29 +35,12 @@
         "cancel"
       ]
     },
-    "created": {
-      "type": "string",
-      "description" : "Creation time of the request (RFC3339 / ISO8601 format)"
-    },
-    "lastUpdated": {
-      "type": "string",
-      "description" : "Last update time of the request (RFC3339 / ISO8601 format)"
-    },
-    "arn": {
-      "type": "string",
-      "description" : "The Agency Registration Number"
-    },
-    "regime": {
-      "$ref": "regime.json"
-    },
-    "clientId": {
-      "type": "string",
-      "description" : "Client's top level ID for their MTD registration (not regime specific)"
-    },
-    "postcode": {
-      "type": "string",
-      "description" : "The Client's post code"
-    },
+    "created": {"$ref": "created.json"},
+    "lastUpdated": {"$ref": "lastupdated.json"},
+    "arn": {"$ref": "arn.json"},
+    "regime": {"$ref": "regime.json"},
+    "clientId": {"$ref": "clientid.json"},
+    "postcode": {"$ref": "postcode.json"},
     "status": {"$ref": "status.json"}
   },
   "required": [
