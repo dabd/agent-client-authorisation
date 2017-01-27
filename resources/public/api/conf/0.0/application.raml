@@ -19,8 +19,7 @@ uses:
   headers: http://api-documentation-raml-frontend.service/api-documentation/assets/common/modules/headers.raml
   annotations: http://api-documentation-raml-frontend.service/api-documentation/assets/common/modules/annotations.raml
   types: http://api-documentation-raml-frontend.service/api-documentation/assets/common/modules/types.raml
-  invitations: modules/invitations.raml
-  atoms:       modules/atoms.raml
+  atoms: modules/atoms.raml
 
 traits:
   loginRequired:
@@ -145,7 +144,7 @@ traits:
     securedBy: [ sec.oauth_2_0: { scopes: [ "read:sent-invitations" ] } ]
     queryParameters:
       status:
-        type: invitations.Status
+        type: atoms.Status
         description: Filter invitations by status. If multiple 'status' filtering parameters are supplied then only the first is considered. See response body 'status' field for the range of valid values.
         example:  Pending
         required: false
@@ -155,7 +154,7 @@ traits:
         example:  client123
         required: false
       regime:
-        type: invitations.Regime
+        type: atoms.Regime
         description: The tax regime.
         example:  mtd-sa
         required: false
@@ -268,12 +267,12 @@ traits:
     queryParameters:
       status:
         description: filter invitations by status. If multiple 'status' filtering parameters are supplied then only the first is considered.
-        type: invitations.Status
+        type: atoms.Status
         example: Pending
         required: false
     responses:
       200:
-        body: #invitations.Invitation[]
+        body:
           application/json:
             description: A list of invitations.
             type: !include schemas/get-client-invitations-received.json
@@ -293,7 +292,6 @@ traits:
       responses:
         200:
           body:
-            #type: invitations.Invitation
             application/json:
                 description: Returns the invitation.
                 type: !include schemas/get-client-invitation-received.json
