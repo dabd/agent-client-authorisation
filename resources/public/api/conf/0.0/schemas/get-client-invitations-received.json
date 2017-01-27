@@ -3,13 +3,14 @@
   "properties": {
     "_links": {
       "type": "object",
+      "description": "Related resources",
       "properties": {
         "self": {
           "type": "object",
           "properties": {
             "href": {
               "type": "string",
-              "description": "Link back to this resource"
+              "description": "A link to the current resource"
             }
           },
           "required": [
@@ -22,7 +23,9 @@
             "type": "object",
             "properties": {
               "href": {
-                "type": "string"
+                "type": "string",
+                "description": "An array of links to individual Invitation resources"
+
               }
             },
             "required": [
@@ -76,7 +79,7 @@
                     "properties": {
                       "href": {
                         "type": "string",
-                        "description": "Link back to this resource"
+                        "description": "A link to the current resource"
                       }
                     },
                     "required": [
@@ -92,7 +95,13 @@
               },
               "regime": {
                 "type": "string",
-                "description": "The tax regime specified in the invitation"
+                "description" : "The tax regime",
+                "oneOf": [
+                  {
+                    "enum": [ "mtd-sa" ],
+                    "description": "The Self Assessment tax regime"
+                  }
+                ]
               },
               "clientId": {
                 "type": "string",
@@ -112,11 +121,29 @@
               },
               "lastUpdated": {
                 "type": "string",
-                "description": "Creation time of the request (RFC3339 / ISO8601 format)"
+                "description": "Last update time of the request (RFC3339 / ISO8601 format)"
               },
               "status": {
                 "type": "string",
-                "description": "The status of the request at the time the request was fulfilled"
+                "description" : "The current status of the invitation",
+                "oneOf": [
+                  {
+                    "enum": [ "Pending" ],
+                    "description": "The invitation has been created, it has not been accepted or rejected by the client. Only the service can set this status"
+                  },
+                  {
+                    "enum": [ "Accepted" ],
+                    "description": "The client has accepted the invitation. Only the client can set this status"
+                  },
+                  {
+                    "enum": [ "Rejected" ],
+                    "description": "The client has rejected the invitation. Only the client can set this status"
+                  },
+                  {
+                    "enum": [ "Cancelled" ],
+                    "description": "The agency has cancelled the invitation. Only the agency can set this status"
+                  }
+                ]
               }
             },
             "required": [

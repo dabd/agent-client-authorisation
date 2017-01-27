@@ -257,8 +257,9 @@ traits:
   is: [headers.acceptHeader, loginRequired, mustBeASaClient, clientRegistrationRequired, permissionOnClientRequired]
   uriParameters:
     clientId:
-      description: Client identifier.
+      description: Client's top level ID for their MTD registration (not regime specific).
       type: string
+      example:  client123
   get:
     displayName: Get invitations received by a client
     description: Retrieves a list of invitations received by a client
@@ -267,15 +268,16 @@ traits:
     queryParameters:
       status:
         description: filter invitations by status. If multiple 'status' filtering parameters are supplied then only the first is considered.
-        type: atoms.Status
+        type: invitations.Status
+        example: Pending
         required: false
     responses:
       200:
         body: #invitations.Invitation[]
           application/json:
             description: A list of invitations.
-            type: !include schemas/getclientinvitations.json
-            example: !include examples/get-client-invitations-sent-example.json
+            type: !include schemas/get-client-invitations-received.json
+            example: !include examples/get-client-invitations-received-example.json
       401:
         description: The client must be authenticated and authorised (logged-in) to use this resource
       403:
@@ -294,7 +296,7 @@ traits:
             #type: invitations.Invitation
             application/json:
                 description: Returns the invitation.
-                type: !include schemas/getclientinvitation.json
+                type: !include schemas/get-client-invitation-received.json
                 example: !include examples/get-client-invitation-example.json
         401:
           description: The client must be authenticated and authorised (logged-in) to use this resource
@@ -306,6 +308,7 @@ traits:
       invitationId:
         description: The id of the invitation.
         type: string
+        example: 5888c22e11000011007afc11
     /accept:
       is: [headers.acceptHeader, loginRequired, mustBeASaClient, clientRegistrationRequired, permissionOnClientRequired, invitationSpecified, invitationMustHaveValidStatus]
       put:

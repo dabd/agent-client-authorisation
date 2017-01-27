@@ -10,7 +10,7 @@
           "properties": {
             "href": {
               "type": "string",
-              "description": "A reference to the current resource"
+              "description": "A link to the current resource"
             }
           },
           "required": [
@@ -37,11 +37,11 @@
     },
     "created": {
       "type": "string",
-      "description" : "The invitation was created at this time"
+      "description" : "Creation time of the request (RFC3339 / ISO8601 format)"
     },
     "lastUpdated": {
       "type": "string",
-      "description" : "The invitation was last updated at this time"
+      "description" : "Last update time of the request (RFC3339 / ISO8601 format)"
     },
     "arn": {
       "type": "string",
