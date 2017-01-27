@@ -28,18 +28,7 @@
             "href"
           ]
         },
-        "self": {
-          "type": "object",
-          "properties": {
-            "href": {
-              "type": "string",
-              "description": "Link back to this resource"
-            }
-          },
-          "required": [
-            "href"
-          ]
-        }
+        "self": {"$ref": "self-link.json"}
       },
       "required": [
         "reject",
