@@ -63,7 +63,7 @@
     },
     "postcode": {
       "type": "string",
-      "description": "This varies between regimes. In this example, for mtd-sa, it is the registered postcode of the client"
+      "description": "The Client's post code"
     },
     "arn": {
       "type": "string",
