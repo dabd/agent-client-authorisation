@@ -1,4 +1,0 @@
-{
-  "type": "string",
-"description": "Creation time of the request (RFC3339 / ISO8601 format)"
-}
